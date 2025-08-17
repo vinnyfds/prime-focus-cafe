@@ -1,42 +1,64 @@
-name: Deploy to AWS
+name: Deploy Frontend (S3 + CloudFront)
 
 on:
   push:
-    branches:
-      - main
-      - feat/**
-      - design-review/**
-  pull_request:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write     # for OIDC
+  contents: read
+
+env:
+  AWS_REGION: us-east-1
+  BUCKET: www.primefocususa.com-site            # not secret
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: prime-focus-cafe
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 20
+          cache: npm
+          cache-dependency-path: prime-focus-cafe/package-lock.json
 
-      - name: Install dependencies
+      - name: Install deps
         run: npm ci
 
-      - name: Build frontend
+      - name: Build
         run: npm run build
 
-      - name: Configure AWS credentials
+      # AWS OIDC authentication (no secrets needed)
+      - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ vars.AWS_OIDC_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
 
-      - name: Deploy to S3
+      - name: Sync to S3
         run: |
-          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET }} --delete
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+          aws s3 sync dist/ s3://${{ env.BUCKET }} --delete
+          aws s3 cp dist/ s3://${{ env.BUCKET }}/ --recursive \
+            --exclude "*" --include "*.html" --cache-control "no-store"
+
+      - name: Invalidate CloudFront
+        run: aws cloudfront create-invalidation --distribution-id ${{ vars.CF_DIST_ID }} --paths "/*"
+
+      - name: Post-deploy smoke
+        shell: bash
+        run: |
+          set -e
+          www="https://www.primefocususa.com"
+          api="https://api.primefocususa.com/v1/healthz"
+          code_www=$(curl -s -o /dev/null -w "%{http_code}" "$www")
+          code_route=$(curl -s -o /dev/null -w "%{http_code}" "$www/some/route")
+          code_api=$(curl -s -o /dev/null -w "%{http_code}" "$api")
+          echo "WWW: $code_www | SPA: $code_route | API: $code_api"
+          test "$code_www" = "200" -a "$code_route" = "200" -a "$code_api" = "200"
