@@ -1,49 +1,63 @@
-name: Deploy Frontend
+name: deploy
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
-
-permissions:
-  id-token: write
-  contents: read
-
-env:
-  AWS_REGION: us-east-1
-  BUCKET: www.primefocususa.com-site
-  CF_DIST_ID: E32K05VBG79GEL
+    branches: [ main ]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: prime-focus-cafe
-
+    outputs:
+      dist-path: dist
     steps:
       - uses: actions/checkout@v4
-
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: prime-focus-cafe/package-lock.json
-
-      - name: Install deps
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Configure AWS credentials
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm asset:verify
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      AWS_CLOUDFRONT_DIST_ID: ${{ secrets.AWS_CLOUDFRONT_DIST_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::831926590271:role/github-actions-deploy
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Sync to S3
-        run: aws s3 sync dist/ s3://${{ env.BUCKET }} --delete
-
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Ensure versioning
+        run: aws s3api put-bucket-versioning --bucket "$AWS_S3_BUCKET" --versioning-configuration Status=Enabled || true
+      - name: Backup current site
+        run: aws s3 sync s3://$AWS_S3_BUCKET s3://$AWS_S3_BUCKET/_backups/${{ github.run_id }}-${{ github.sha }} --delete
+      - name: Upload dist
+        run: |
+          aws s3 sync dist/ s3://$AWS_S3_BUCKET/ --delete
+          aws s3 cp dist/ s3://$AWS_S3_BUCKET/ --recursive --exclude "*" --include "*.css"  --content-type "text/css"               --metadata-directive REPLACE
+          aws s3 cp dist/ s3://$AWS_S3_BUCKET/ --recursive --exclude "*" --include "*.js"   --content-type "application/javascript" --metadata-directive REPLACE
+          aws s3 cp dist/ s3://$AWS_S3_BUCKET/ --recursive --exclude "*" --include "*.json" --content-type "application/json"       --metadata-directive REPLACE
+          aws s3 cp dist/ s3://$AWS_S3_BUCKET/ --recursive --exclude "*" --include "*.svg"  --content-type "image/svg+xml"          --metadata-directive REPLACE
+          aws s3 cp dist/assets/ s3://$AWS_S3_BUCKET/assets/ --recursive --cache-control "public, max-age=31536000, immutable"
+          aws s3 cp dist/index.html s3://$AWS_S3_BUCKET/index.html --cache-control "no-cache"
       - name: Invalidate CloudFront
-        run: aws cloudfront create-invalidation --distribution-id ${{ env.CF_DIST_ID }} --paths "/*"
+        id: invalidate
+        run: |
+          aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DIST_ID --paths "/*" > invalidate.json
+          cat invalidate.json
+      - name: Upload deploy log artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-log
+          path: invalidate.json
