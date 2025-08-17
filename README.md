@@ -1,6 +1,6 @@
 # Prime Focus Cafe
 
-A modern React frontend application for Prime Focus Cafe with Vercel deployment.
+A modern React frontend application for Prime Focus Cafe with AWS deployment.
 
 ## Features
 
@@ -9,7 +9,7 @@ A modern React frontend application for Prime Focus Cafe with Vercel deployment.
 - Framer Motion for animations
 - Responsive design
 - GitHub Actions for CI/CD
-- Vercel deployment
+- AWS S3 + CloudFront deployment
 
 ## Development
 
@@ -26,4 +26,11 @@ npm run build
 
 ## Deployment
 
-The application is automatically deployed to Vercel via GitHub Actions when changes are pushed to the main branch.
+The application is automatically deployed to AWS S3 and served via CloudFront CDN when changes are pushed to the main branch.
+
+### Required AWS Secrets:
+- `AWS_ACCESS_KEY_ID` - AWS access key
+- `AWS_SECRET_ACCESS_KEY` - AWS secret key  
+- `AWS_REGION` - AWS region (e.g., us-east-1)
+- `S3_BUCKET` - S3 bucket name for hosting
+- `CLOUDFRONT_DISTRIBUTION_ID` - CloudFront distribution ID
