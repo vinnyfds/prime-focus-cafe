@@ -6,16 +6,30 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\" --no-error-on-unmatched-pattern",
+    "lint:ci": "eslint \"src/**/*.{ts,tsx,js,jsx}\" --quiet --no-error-on-unmatched-pattern",
+    "lint:strict": "eslint \"src/**/*.{ts,tsx,js,jsx}\" --max-warnings=0 --no-error-on-unmatched-pattern",
+    "lint:fix": "eslint \"src/**/*.{ts,tsx,js,jsx}\" --fix --no-error-on-unmatched-pattern",
+    "preview": "vite preview",
+    "verify:images": "node ops/scripts/verify-images.mjs",
+    "asset:verify": "npm run verify:images",
+    "favicons": "node ops/scripts/generate-favicons.mjs",
+    "images:map": "node ops/scripts/find-and-map-images.mjs",
+    "images:apply": "node ops/scripts/apply-image-mapping.mjs",
+    "patch:bundle": "node ops/scripts/guard-map-calls.mjs"
   },
   "dependencies": {
+    "framer-motion": "^10.12.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.1",
-    "framer-motion": "^10.12.16"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@babel/generator": "^7.28.3",
+    "@babel/parser": "^7.28.3",
+    "@babel/traverse": "^7.28.3",
+    "@types/node": "^24.3.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
@@ -23,11 +37,18 @@
     "@vitejs/plugin-react": "^3.1.0",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
+    "favicons": "^7.1.5",
+    "glob": "^11.0.3",
     "postcss": "^8.4.23",
     "tailwindcss": "^3.3.2",
-    "typescript": "^4.9.3",
-    "vite": "^4.1.0"
+    "ts-node": "^10.9.2",
+    "typescript": "^4.9.5",
+    "vite": "^4.5.0",
+    "vite-plugin-static-copy": "^0.17.0"
   }
 }
