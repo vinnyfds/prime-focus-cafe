@@ -1,0 +1,87 @@
+name: OIDC smoke test
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/oidc-smoke-test.yml"
+      - "ops/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  BUCKET: ${{ vars.AWS_S3_BUCKET }}
+  DIST_ID: ${{ vars.AWS_CLOUDFRONT_DIST_ID }}
+  AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show repo vars (masked in logs where applicable)
+        run: |
+          echo "Bucket: $BUCKET"
+          echo "DistID: $DIST_ID"
+          echo "Region: $AWS_REGION"
+          echo "Role ARN: ${{ vars.AWS_OIDC_ROLE_ARN }}"
+
+      - name: Debug GitHub OIDC Claims
+        run: |
+          echo "=== GitHub OIDC Context Debug ==="
+          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "GITHUB_REF: $GITHUB_REF"
+          echo "GITHUB_HEAD_REF: $GITHUB_HEAD_REF"
+          echo "GITHUB_BASE_REF: $GITHUB_BASE_REF"
+          echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
+          echo "GITHUB_SHA: $GITHUB_SHA"
+          echo "GITHUB_ACTOR: $GITHUB_ACTOR"
+          echo "GITHUB_WORKFLOW: $GITHUB_WORKFLOW"
+          echo "GITHUB_RUN_ID: $GITHUB_RUN_ID"
+          echo "GITHUB_RUN_NUMBER: $GITHUB_RUN_NUMBER"
+          echo "GITHUB_JOB: $GITHUB_JOB"
+          echo "=== Expected OIDC Subject Claims ==="
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "Expected sub for workflow_dispatch: repo:$GITHUB_REPOSITORY:ref:$GITHUB_REF"
+          elif [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            echo "Expected sub for pull_request: repo:$GITHUB_REPOSITORY:pull_request"
+          else
+            echo "Expected sub for push: repo:$GITHUB_REPOSITORY:ref:$GITHUB_REF"
+          fi
+
+      - name: Assume AWS role via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_OIDC_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: GitHubActions-OIDCTest-${{ github.run_id }}
+
+      - name: Who am I?
+        run: aws sts get-caller-identity
+
+      - name: Check bucket exists + list a few keys
+        run: |
+          set -euo pipefail
+          aws s3api head-bucket --bucket "$BUCKET"
+          aws s3api get-bucket-location --bucket "$BUCKET"
+          aws s3api list-objects-v2 --bucket "$BUCKET" --max-keys 5 || true
+
+      - name: Check versioning status
+        run: aws s3api get-bucket-versioning --bucket "$BUCKET"
+
+      - name: Write + delete a tiny probe file (safe)
+        run: |
+          set -euo pipefail
+          fname="_probes/oidc-${{ github.run_id }}.txt"
+          echo "oidc ok: $GITHUB_SHA at $(date -u +%FT%TZ)" > probe.txt
+          aws s3 cp probe.txt "s3://$BUCKET/$fname" --content-type "text/plain"
+          aws s3 ls "s3://$BUCKET/$fname"
+          aws s3 rm "s3://$BUCKET/$fname" --quiet
+          echo "Probe wrote & deleted: s3://$BUCKET/$fname"
+
+      # NOTE: We purposely do NOT call CloudFront here.
+      # If you want to test it later, add:
+      # aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/__oidc-smoke-${{ github.run_id }}.txt"
