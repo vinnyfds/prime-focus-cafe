@@ -11,6 +11,8 @@
     "verify:images": "node ops/scripts/verify-images.mjs",
     "asset:verify": "npm run verify:images",
     "favicons": "node ops/scripts/generate-favicons.mjs",
+    "images:map": "node ops/scripts/find-and-map-images.mjs",
+    "images:apply": "node ops/scripts/apply-image-mapping.mjs",
     "patch:bundle": "node ops/scripts/guard-map-calls.mjs"
   },
   "dependencies": {

@@ -9,7 +9,8 @@ export default defineConfig({
       targets: [
         { src: '../docs/*.png', dest: 'images' },
         { src: '../docs/*.jpg', dest: 'images' },
-        { src: '../docs/*.jpeg', dest: 'images' }
+        { src: '../docs/*.jpeg', dest: 'images' },
+        { src: '../docs/*.webp', dest: 'images' }
       ]
     })
   ],
