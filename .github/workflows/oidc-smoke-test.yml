@@ -1,4 +1,11 @@
 name: OIDC smoke test
+
+# Required Repository Variables:
+#   AWS_S3_BUCKET: S3 bucket name for testing
+#   AWS_CLOUDFRONT_DIST_ID: CloudFront distribution ID
+#   AWS_REGION: AWS region (defaults to us-east-1)
+#   AWS_OIDC_ROLE_ARN: ARN of the IAM role for OIDC authentication
+
 on:
   workflow_dispatch:
   pull_request:
@@ -11,8 +18,8 @@ permissions:
   contents: read
 
 env:
-  BUCKET: ${{ vars.AWS_S3_BUCKET }}
-  DIST_ID: ${{ vars.AWS_CLOUDFRONT_DIST_ID }}
+  BUCKET: ${{ vars.AWS_S3_BUCKET || 'MISSING_VARIABLE' }}
+  DIST_ID: ${{ vars.AWS_CLOUDFRONT_DIST_ID || 'MISSING_VARIABLE' }}
   AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
 
 jobs:
@@ -27,7 +34,9 @@ jobs:
           echo "Bucket: $BUCKET"
           echo "DistID: $DIST_ID"
           echo "Region: $AWS_REGION"
-          echo "Role ARN: ${{ vars.AWS_OIDC_ROLE_ARN }}"
+          echo "Role ARN: $OIDC_ROLE"
+        env:
+          OIDC_ROLE: ${{ vars.AWS_OIDC_ROLE_ARN || 'MISSING_VARIABLE' }}
 
       - name: Debug GitHub OIDC Claims
         run: |
@@ -55,9 +64,12 @@ jobs:
       - name: Assume AWS role via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ vars.AWS_OIDC_ROLE_ARN }}
+          role-to-assume: ${{ vars.AWS_OIDC_ROLE_ARN || 'MISSING_VARIABLE' }}
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: GitHubActions-OIDCTest-${{ github.run_id }}
+        env:
+          # Validate required variable exists
+          OIDC_ROLE: ${{ vars.AWS_OIDC_ROLE_ARN }}
 
       - name: Who am I?
         run: aws sts get-caller-identity

@@ -1,0 +1,70 @@
+name: Validate Configuration
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+jobs:
+  validate-variables:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Required Variables
+        run: |
+          echo "Validating repository variables..."
+          errors=0
+          
+          # Check AWS_OIDC_ROLE_ARN
+          if [ -z "$OIDC_ROLE" ] || [ "$OIDC_ROLE" = "MISSING_VARIABLE" ]; then
+            echo "❌ AWS_OIDC_ROLE_ARN variable is not configured"
+            errors=$((errors + 1))
+          else
+            echo "✅ AWS_OIDC_ROLE_ARN is configured"
+          fi
+          
+          # Check CF_DIST_ID (deploy-aws.yml)
+          if [ -z "$CF_DIST_ID" ] || [ "$CF_DIST_ID" = "MISSING_VARIABLE" ]; then
+            echo "❌ CF_DIST_ID variable is not configured"
+            errors=$((errors + 1))
+          else
+            echo "✅ CF_DIST_ID is configured"
+          fi
+          
+          # Check AWS_S3_BUCKET (deploy.yml, oidc-smoke-test.yml)
+          if [ -z "$S3_BUCKET" ] || [ "$S3_BUCKET" = "MISSING_VARIABLE" ]; then
+            echo "❌ AWS_S3_BUCKET variable is not configured"
+            errors=$((errors + 1))
+          else
+            echo "✅ AWS_S3_BUCKET is configured"
+          fi
+          
+          # Check AWS_CLOUDFRONT_DIST_ID (deploy.yml, oidc-smoke-test.yml)
+          if [ -z "$CF_LEGACY_DIST_ID" ] || [ "$CF_LEGACY_DIST_ID" = "MISSING_VARIABLE" ]; then
+            echo "❌ AWS_CLOUDFRONT_DIST_ID variable is not configured"
+            errors=$((errors + 1))
+          else
+            echo "✅ AWS_CLOUDFRONT_DIST_ID is configured"
+          fi
+          
+          # Check AWS_REGION (optional, has default)
+          if [ -z "$AWS_REGION" ]; then
+            echo "⚠️  AWS_REGION variable not set, using default: us-east-1"
+          else
+            echo "✅ AWS_REGION is configured: $AWS_REGION"
+          fi
+          
+          if [ $errors -eq 0 ]; then
+            echo ""
+            echo "🎉 All required variables are properly configured!"
+          else
+            echo ""
+            echo "❌ $errors variable(s) need to be configured in Repository Settings > Secrets and variables > Actions > Variables"
+            exit 1
+          fi
+        env:
+          OIDC_ROLE: ${{ vars.AWS_OIDC_ROLE_ARN || 'MISSING_VARIABLE' }}
+          CF_DIST_ID: ${{ vars.CF_DIST_ID || 'MISSING_VARIABLE' }}
+          S3_BUCKET: ${{ vars.AWS_S3_BUCKET || 'MISSING_VARIABLE' }}
+          CF_LEGACY_DIST_ID: ${{ vars.AWS_CLOUDFRONT_DIST_ID || 'MISSING_VARIABLE' }}
+          AWS_REGION: ${{ vars.AWS_REGION }}

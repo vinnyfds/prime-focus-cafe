@@ -1,5 +1,11 @@
 name: deploy
 
+# Required Repository Variables:
+#   AWS_S3_BUCKET: S3 bucket name for deployment
+#   AWS_CLOUDFRONT_DIST_ID: CloudFront distribution ID for cache invalidation
+#   AWS_REGION: AWS region (defaults to us-east-1)
+#   AWS_OIDC_ROLE_ARN: ARN of the IAM role for OIDC authentication
+
 on:
   push:
     branches: [ main ]
@@ -9,8 +15,8 @@ permissions:
   contents: read
 
 env:
-  AWS_S3_BUCKET: ${{ vars.AWS_S3_BUCKET }}
-  AWS_CLOUDFRONT_DIST_ID: ${{ vars.AWS_CLOUDFRONT_DIST_ID }}
+  AWS_S3_BUCKET: ${{ vars.AWS_S3_BUCKET || 'MISSING_VARIABLE' }}
+  AWS_CLOUDFRONT_DIST_ID: ${{ vars.AWS_CLOUDFRONT_DIST_ID || 'MISSING_VARIABLE' }}
   AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
 
 jobs:
@@ -41,8 +47,11 @@ jobs:
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ vars.AWS_OIDC_ROLE_ARN }}
+          role-to-assume: ${{ vars.AWS_OIDC_ROLE_ARN || 'MISSING_VARIABLE' }}
           aws-region: ${{ env.AWS_REGION }}
+        env:
+          # Validate required variable exists
+          OIDC_ROLE: ${{ vars.AWS_OIDC_ROLE_ARN }}
       - name: Ensure versioning
         run: aws s3api put-bucket-versioning --bucket "$AWS_S3_BUCKET" --versioning-configuration Status=Enabled || true
       - name: Backup current site
