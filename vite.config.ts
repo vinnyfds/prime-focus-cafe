@@ -7,10 +7,10 @@ export default defineConfig({
     react(),
     viteStaticCopy({
       targets: [
-        { src: '../docs/*.png', dest: 'images' },
-        { src: '../docs/*.jpg', dest: 'images' },
-        { src: '../docs/*.jpeg', dest: 'images' },
-        { src: '../docs/*.webp', dest: 'images' }
+        { src: 'public/images/*.png', dest: 'images' },
+        { src: 'public/images/*.jpg', dest: 'images' },
+        { src: 'public/images/*.jpeg', dest: 'images' },
+        { src: 'public/images/*.webp', dest: 'images' }
       ]
     })
   ],
