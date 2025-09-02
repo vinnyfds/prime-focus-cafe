@@ -12,9 +12,9 @@ function Header() {
         <div className="flex justify-between items-center py-6">
           {/* Logo */}
           <div className="flex items-center">
-            <img 
-              src="/images/logo-owl.jpg" 
-              alt="Prime Focus C.A.F.E." 
+            <img
+              src="/images/logo-owl.jpg"
+              alt="Prime Focus C.A.F.E."
               className="h-12 w-12 rounded-full mr-3"
             />
             <span className="text-2xl font-bold text-white">
@@ -174,9 +174,9 @@ function Hero() {
           <div className="space-y-6">
             {/* Horizontal Logo Card */}
             <div className="bg-white text-slate-900 rounded-2xl shadow-xl p-8 text-center">
-              <img 
-                src="/images/logo-horizontal.png" 
-                alt="Prime Focus C.A.F.E." 
+              <img
+                src="/images/logo-horizontal.png"
+                alt="Prime Focus C.A.F.E."
                 className="w-full max-w-xs mx-auto mb-4"
               />
             </div>
@@ -184,12 +184,25 @@ function Hero() {
             {/* CEO Profile */}
             <div className="bg-white text-slate-900 rounded-2xl shadow-xl p-6">
               <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-slate-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
-                  CEO
-                </div>
+                <img 
+                  src="/images/dr-ram.jpg" 
+                  alt="Dr. Ram P. Ramcharran" 
+                  className="w-16 h-16 rounded-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = '/images/placeholders/placeholder.png';
+                  }}
+                />
                 <div>
-                  <h4 className="font-semibold text-slate-900">CEO</h4>
-                  <p className="text-slate-600 text-sm">Prime Focus C.A.F.E.</p>
+                  <h4 className="font-semibold text-slate-900">Dr. Ram P. Ramcharran</h4>
+                  <p className="text-slate-600 text-sm">CEO, Prime Focus C.A.F.E.</p>
+                  <a 
+                    href="https://www.linkedin.com/in/dr-ram-p-ramcharran-594b648/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 text-xs underline"
+                  >
+                    View LinkedIn Profile
+                  </a>
                 </div>
               </div>
             </div>
@@ -291,45 +304,41 @@ function ScienceSection() {
 
 function WhyPrimeFocus() {
   const [selectedBenefit, setSelectedBenefit] = useState(0);
-  
-  const benefits = [
-    {
-      name: "Enhanced Focus",
-      color: "bg-blue-500",
-      image: "/images/placeholders/focus.jpg",
-      description: "Sharpen your concentration and maintain laser-like focus throughout your day."
-    },
-    {
-      name: "Sustained Energy",
-      color: "bg-green-500", 
-      image: "/images/placeholders/energy.jpg",
-      description: "Experience steady, long-lasting energy without crashes or jitters."
-    },
-    {
-      name: "Mental Clarity",
-      color: "bg-purple-500",
-      image: "/images/placeholders/clarity.jpg", 
-      description: "Clear mental fog and enhance cognitive processing speed."
-    },
-    {
-      name: "Stress Reduction",
-      color: "bg-orange-500",
-      image: "/images/placeholders/stress.jpg",
-      description: "Manage stress levels and maintain calm under pressure."
-    },
-    {
-      name: "Improved Mood",
-      color: "bg-red-500",
-      image: "/images/placeholders/mood.jpg",
-      description: "Boost your mood and emotional well-being naturally."
-    },
-    {
-      name: "Better Sleep",
-      color: "bg-indigo-500",
-      image: "/images/placeholders/sleep.jpg",
-      description: "Improve sleep quality and wake up feeling refreshed."
-    }
-  ];
+
+      const benefits = [
+      {
+        name: "Enhanced Focus",
+        color: "bg-blue-500",
+        description:
+          "Sharpen your concentration and maintain laser-like focus throughout your day.",
+      },
+      {
+        name: "Sustained Energy",
+        color: "bg-green-500",
+        description:
+          "Experience steady, long-lasting energy without crashes or jitters.",
+      },
+      {
+        name: "Mental Clarity",
+        color: "bg-purple-500",
+        description: "Clear mental fog and enhance cognitive processing speed.",
+      },
+      {
+        name: "Stress Reduction",
+        color: "bg-orange-500",
+        description: "Manage stress levels and maintain calm under pressure.",
+      },
+      {
+        name: "Improved Mood",
+        color: "bg-red-500",
+        description: "Boost your mood and emotional well-being naturally.",
+      },
+      {
+        name: "Better Sleep",
+        color: "bg-indigo-500",
+        description: "Improve sleep quality and wake up feeling refreshed.",
+      },
+    ];
 
   return (
     <section className="py-20 bg-white">
@@ -338,14 +347,11 @@ function WhyPrimeFocus() {
           {/* Left Side - Dynamic Image */}
           <div className="flex justify-center">
             <div className="bg-white text-slate-900 rounded-2xl shadow-xl p-8 text-center border-2 border-slate-200 w-full max-w-md">
-              <img 
-                src={benefits[selectedBenefit].image} 
-                alt={benefits[selectedBenefit].name}
-                className="w-full h-64 object-cover rounded-lg mb-4"
-                onError={(e) => {
-                  e.currentTarget.src = '/images/placeholders/placeholder.png';
-                }}
-              />
+                              <div 
+                  className={`w-full h-64 rounded-lg mb-4 flex items-center justify-center text-white text-2xl font-bold ${benefits[selectedBenefit].color}`}
+                >
+                  {benefits[selectedBenefit].name}
+                </div>
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
                 {benefits[selectedBenefit].name}
               </h3>
@@ -368,14 +374,18 @@ function WhyPrimeFocus() {
 
             <div className="space-y-4 mb-8">
               {benefits.map((benefit, index) => (
-                <div 
+                <div
                   key={index}
                   className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-all ${
-                    selectedBenefit === index ? 'bg-brand-cream border-2 border-brand-gold' : 'hover:bg-gray-50'
+                    selectedBenefit === index
+                      ? "bg-brand-cream border-2 border-brand-gold"
+                      : "hover:bg-gray-50"
                   }`}
                   onClick={() => setSelectedBenefit(index)}
                 >
-                  <div className={`w-6 h-6 ${benefit.color} rounded-full flex items-center justify-center text-white text-sm font-bold`}>
+                  <div
+                    className={`w-6 h-6 ${benefit.color} rounded-full flex items-center justify-center text-white text-sm font-bold`}
+                  >
                     ✓
                   </div>
                   <span className="text-slate-700 font-medium">
@@ -557,7 +567,9 @@ function Ingredients() {
   ];
 
   const scrollToReferences = () => {
-    document.getElementById("references")?.scrollIntoView({ behavior: "smooth" });
+    document
+      .getElementById("references")
+      ?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -786,7 +798,7 @@ function StayUpdated() {
 
 function References() {
   const [showAllReferences, setShowAllReferences] = useState(false);
-  
+
   const references = [
     {
       id: 1,
@@ -976,42 +988,44 @@ function References() {
 
         {/* References Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
-          {(showAllReferences ? references : references.slice(0, 6)).map((reference) => (
-            <div
-              key={reference.id}
-              className="bg-white rounded-lg p-6 border border-gray-200"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <span className="text-2xl font-bold text-blue-600">
-                  {reference.id}
-                </span>
-                <div className="flex space-x-2">
-                  <button className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
-                    View
-                  </button>
-                  <button className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors">
-                    Download
-                  </button>
+          {(showAllReferences ? references : references.slice(0, 6)).map(
+            (reference) => (
+              <div
+                key={reference.id}
+                className="bg-white rounded-lg p-6 border border-gray-200"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <span className="text-2xl font-bold text-blue-600">
+                    {reference.id}
+                  </span>
+                  <div className="flex space-x-2">
+                    <button className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                      View
+                    </button>
+                    <button className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors">
+                      Download
+                    </button>
+                  </div>
                 </div>
-              </div>
 
-              <h4 className="font-semibold text-gray-900 mb-2 text-lg">
-                {reference.title}
-              </h4>
-              <p className="text-gray-600 mb-2">
-                <span className="font-medium">{reference.journal}</span>
-              </p>
-              <p className="text-gray-500 text-sm mb-3">
-                Authors: {reference.authors}
-              </p>
-              <p className="text-gray-700 text-sm mb-3 leading-relaxed">
-                {reference.abstract}
-              </p>
-              <p className="text-blue-600 text-sm font-mono">
-                DOI: {reference.doi}
-              </p>
-            </div>
-          ))}
+                <h4 className="font-semibold text-gray-900 mb-2 text-lg">
+                  {reference.title}
+                </h4>
+                <p className="text-gray-600 mb-2">
+                  <span className="font-medium">{reference.journal}</span>
+                </p>
+                <p className="text-gray-500 text-sm mb-3">
+                  Authors: {reference.authors}
+                </p>
+                <p className="text-gray-700 text-sm mb-3 leading-relaxed">
+                  {reference.abstract}
+                </p>
+                <p className="text-blue-600 text-sm font-mono">
+                  DOI: {reference.doi}
+                </p>
+              </div>
+            )
+          )}
         </div>
 
         {!showAllReferences && (
