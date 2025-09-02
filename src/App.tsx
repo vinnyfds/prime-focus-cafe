@@ -184,20 +184,21 @@ function Hero() {
             {/* CEO Profile */}
             <div className="bg-white text-slate-900 rounded-2xl shadow-xl p-6">
               <div className="flex items-center space-x-4">
-                <img 
-                  src="/images/dr-ram.jpg" 
-                  alt="Dr. Ram P. Ramcharran" 
+                <img
+                  src="/images/dr-ram.svg"
+                  alt="Dr. Ram P. Ramcharran"
                   className="w-16 h-16 rounded-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = '/images/placeholders/placeholder.png';
-                  }}
                 />
                 <div>
-                  <h4 className="font-semibold text-slate-900">Dr. Ram P. Ramcharran</h4>
-                  <p className="text-slate-600 text-sm">CEO, Prime Focus C.A.F.E.</p>
-                  <a 
-                    href="https://www.linkedin.com/in/dr-ram-p-ramcharran-594b648/" 
-                    target="_blank" 
+                  <h4 className="font-semibold text-slate-900">
+                    Dr. Ram P. Ramcharran
+                  </h4>
+                  <p className="text-slate-600 text-sm">
+                    CEO, Prime Focus C.A.F.E.
+                  </p>
+                  <a
+                    href="https://www.linkedin.com/in/dr-ram-p-ramcharran-594b648/"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800 text-xs underline"
                   >
@@ -305,40 +306,40 @@ function ScienceSection() {
 function WhyPrimeFocus() {
   const [selectedBenefit, setSelectedBenefit] = useState(0);
 
-      const benefits = [
-      {
-        name: "Enhanced Focus",
-        color: "bg-blue-500",
-        description:
-          "Sharpen your concentration and maintain laser-like focus throughout your day.",
-      },
-      {
-        name: "Sustained Energy",
-        color: "bg-green-500",
-        description:
-          "Experience steady, long-lasting energy without crashes or jitters.",
-      },
-      {
-        name: "Mental Clarity",
-        color: "bg-purple-500",
-        description: "Clear mental fog and enhance cognitive processing speed.",
-      },
-      {
-        name: "Stress Reduction",
-        color: "bg-orange-500",
-        description: "Manage stress levels and maintain calm under pressure.",
-      },
-      {
-        name: "Improved Mood",
-        color: "bg-red-500",
-        description: "Boost your mood and emotional well-being naturally.",
-      },
-      {
-        name: "Better Sleep",
-        color: "bg-indigo-500",
-        description: "Improve sleep quality and wake up feeling refreshed.",
-      },
-    ];
+  const benefits = [
+    {
+      name: "Enhanced Focus",
+      color: "bg-blue-500",
+      description:
+        "Sharpen your concentration and maintain laser-like focus throughout your day.",
+    },
+    {
+      name: "Sustained Energy",
+      color: "bg-green-500",
+      description:
+        "Experience steady, long-lasting energy without crashes or jitters.",
+    },
+    {
+      name: "Mental Clarity",
+      color: "bg-purple-500",
+      description: "Clear mental fog and enhance cognitive processing speed.",
+    },
+    {
+      name: "Stress Reduction",
+      color: "bg-orange-500",
+      description: "Manage stress levels and maintain calm under pressure.",
+    },
+    {
+      name: "Improved Mood",
+      color: "bg-red-500",
+      description: "Boost your mood and emotional well-being naturally.",
+    },
+    {
+      name: "Better Sleep",
+      color: "bg-indigo-500",
+      description: "Improve sleep quality and wake up feeling refreshed.",
+    },
+  ];
 
   return (
     <section className="py-20 bg-white">
@@ -347,11 +348,11 @@ function WhyPrimeFocus() {
           {/* Left Side - Dynamic Image */}
           <div className="flex justify-center">
             <div className="bg-white text-slate-900 rounded-2xl shadow-xl p-8 text-center border-2 border-slate-200 w-full max-w-md">
-                              <div 
-                  className={`w-full h-64 rounded-lg mb-4 flex items-center justify-center text-white text-2xl font-bold ${benefits[selectedBenefit].color}`}
-                >
-                  {benefits[selectedBenefit].name}
-                </div>
+              <div
+                className={`w-full h-64 rounded-lg mb-4 flex items-center justify-center text-white text-2xl font-bold ${benefits[selectedBenefit].color}`}
+              >
+                {benefits[selectedBenefit].name}
+              </div>
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
                 {benefits[selectedBenefit].name}
               </h3>
@@ -397,6 +398,77 @@ function WhyPrimeFocus() {
 
             <button className="bg-brand-gold hover:bg-brand-orange text-slate-900 px-8 py-3 rounded-lg font-semibold transition-colors">
               Explore Benefits
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ThreeCards() {
+  const scrollToSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  return (
+    <section className="py-20 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Science Backed Formulation Card */}
+          <div className="bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl p-8 text-white shadow-xl">
+            <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-6">
+              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold mb-4">Science-Backed Formulation</h3>
+            <p className="text-white text-opacity-90 mb-6">
+              Clinically proven ingredients backed by scientific research
+            </p>
+            <button 
+              onClick={() => scrollToSection('references')}
+              className="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            >
+              Learn More
+            </button>
+          </div>
+
+          {/* Premium Ingredients Card */}
+          <div className="bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl p-8 text-white shadow-xl">
+            <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-6">
+              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold mb-4">Premium Ingredients</h3>
+            <p className="text-white text-opacity-90 mb-6">
+              High-quality, natural ingredients sourced from trusted suppliers
+            </p>
+            <button 
+              onClick={() => scrollToSection('ingredients')}
+              className="bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            >
+              Learn More
+            </button>
+          </div>
+
+          {/* Join the Community Card */}
+          <div className="bg-gradient-to-br from-orange-500 to-yellow-500 rounded-2xl p-8 text-white shadow-xl">
+            <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-6">
+              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold mb-4">Join the Community</h3>
+            <p className="text-white text-opacity-90 mb-6">
+              Connect with like-minded individuals focused on mental clarity
+            </p>
+            <button 
+              onClick={() => scrollToSection('newsletter')}
+              className="bg-white text-orange-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            >
+              Learn More
             </button>
           </div>
         </div>
@@ -774,7 +846,7 @@ function RealLife() {
 
 function StayUpdated() {
   return (
-    <section className="py-20 bg-slate-900 text-white">
+    <section id="newsletter" className="py-20 bg-slate-900 text-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-4xl font-bold text-white mb-6">Stay Updated</h2>
         <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
@@ -1411,6 +1483,7 @@ function AppContent() {
       <HorizontalDarkBar />
       <ScienceSection />
       <WhyPrimeFocus />
+      <ThreeCards />
       <FAQ />
       <Ingredients />
       <Testimonials />
