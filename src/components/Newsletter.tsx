@@ -85,7 +85,7 @@ const Newsletter: React.FC<NewsletterProps> = ({ variant = "footer" }) => {
               value={formData.firstName}
               onChange={handleInputChange}
               required
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-900"
             />
             <input
               type="email"
@@ -94,7 +94,7 @@ const Newsletter: React.FC<NewsletterProps> = ({ variant = "footer" }) => {
               value={formData.email}
               onChange={handleInputChange}
               required
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-900"
             />
             <label className="flex items-center space-x-2 text-xs">
               <input

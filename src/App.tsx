@@ -281,7 +281,10 @@ function Banner() {
         </div>
       </div>
 
-      <WaitlistPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+      <WaitlistPopup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+      />
     </section>
   );
 }
@@ -747,8 +750,6 @@ function Testimonials() {
   );
 }
 
-
-
 function RealLife() {
   return (
     <section className="py-20 bg-white">
@@ -806,27 +807,33 @@ function RealLife() {
   );
 }
 
-function WaitlistPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+function WaitlistPopup({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: ''
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
   });
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      alert('Successfully joined the waitlist!');
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      alert("Successfully joined the waitlist!");
       onClose();
-      setFormData({ firstName: '', lastName: '', email: '', phone: '' });
+      setFormData({ firstName: "", lastName: "", email: "", phone: "" });
     } catch (error) {
-      alert('Error joining waitlist. Please try again.');
+      alert("Error joining waitlist. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -835,7 +842,7 @@ function WaitlistPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -845,7 +852,9 @@ function WaitlistPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-bold text-slate-900">Join the Waitlist</h3>
+          <h3 className="text-2xl font-bold text-slate-900">
+            Join the Waitlist
+          </h3>
           <button
             onClick={onClose}
             className="text-slate-500 hover:text-slate-700 text-2xl font-bold"
@@ -929,14 +938,14 @@ function StayUpdated() {
             </div>
             <p className="text-slate-600 font-medium">Active Members</p>
           </div>
-          
+
           <div className="text-center">
             <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
               <span className="text-white text-2xl font-bold">75</span>
             </div>
             <p className="text-slate-600 font-medium">Daily Users</p>
           </div>
-          
+
           <div className="text-center">
             <div className="w-24 h-24 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
               <span className="text-white text-2xl font-bold">25</span>
@@ -946,7 +955,7 @@ function StayUpdated() {
         </div>
 
         {/* Join Waitlist Button */}
-        <button 
+        <button
           onClick={() => setIsPopupOpen(true)}
           className="bg-brand-gold hover:bg-brand-orange text-slate-900 px-12 py-4 rounded-lg font-bold text-lg transition-colors shadow-lg"
         >
@@ -954,7 +963,10 @@ function StayUpdated() {
         </button>
       </div>
 
-      <WaitlistPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+      <WaitlistPopup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+      />
     </section>
   );
 }
