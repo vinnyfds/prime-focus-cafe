@@ -21,7 +21,7 @@ const Newsletter: React.FC<NewsletterProps> = ({ variant = "footer" }) => {
 
     try {
       const response = await fetch(
-        "https://api.primefocususa.com/v1/newsletter/join",
+        "https://api.primefocususa.com/api/waitlist/join",
         {
           method: "POST",
           headers: {
@@ -32,6 +32,7 @@ const Newsletter: React.FC<NewsletterProps> = ({ variant = "footer" }) => {
             lastName: "", // Optional for newsletter
             email: formData.email,
             consent: formData.consent,
+            source: "newsletter"
           }),
         }
       );

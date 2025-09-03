@@ -1,7 +1,7 @@
 import "./App.css";
 import AppErrorBoundary from "./components/AppErrorBoundary";
 import Cart from "./components/Cart";
-import Auth from "./components/Auth";
+import AuthEnhanced from "./components/AuthEnhanced";
 import Newsletter from "./components/Newsletter";
 import { useState } from "react";
 
@@ -88,7 +88,7 @@ function Header() {
 
           {/* Right side - Auth, Cart, Order Now */}
           <div className="flex items-center space-x-4">
-            <Auth onLogin={() => {}} onLogout={() => {}} />
+            <AuthEnhanced onLogin={() => {}} onLogout={() => {}} />
             <Cart />
             <button
               className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-6 py-2 rounded-lg font-semibold transition-colors"
@@ -827,13 +827,33 @@ function WaitlistPopup({
     setLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("Successfully joined the waitlist!");
-      onClose();
-      setFormData({ firstName: "", lastName: "", email: "", phone: "" });
+      const response = await fetch("https://api.primefocususa.com/api/waitlist/join", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone || null,
+          consent: true,
+          source: "popup"
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert("Successfully joined the waitlist!");
+        onClose();
+        setFormData({ firstName: "", lastName: "", email: "", phone: "" });
+      } else {
+        alert(result.message || "Error joining waitlist. Please try again.");
+      }
     } catch (error) {
-      alert("Error joining waitlist. Please try again.");
+      console.error("Waitlist submission error:", error);
+      alert("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
