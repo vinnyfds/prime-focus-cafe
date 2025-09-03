@@ -245,56 +245,29 @@ function HorizontalDarkBar() {
   );
 }
 
-function ScienceSection() {
+function Banner() {
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Science-Backed Formulation Card */}
-          <div className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl p-8 text-white text-center">
-            <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white text-4xl font-bold mx-auto mb-6">
-              🧠
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Science-Backed Formulation
-            </h3>
-            <p className="text-white text-opacity-90 mb-6">
-              Clinically proven ingredients backed by scientific research
-            </p>
-            <button className="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-              Learn More
+    <section className="py-16 bg-gradient-to-r from-brand-navy to-brand-gold">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Unlock Your Cognitive Potential
+          </h2>
+          <p className="text-xl text-white text-opacity-90 mb-8 leading-relaxed">
+            Experience the power of scientifically-formulated nootropics designed for modern professionals who demand peak mental performance.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button 
+              onClick={() => document.getElementById('ingredients')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-white text-brand-navy px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors shadow-lg"
+            >
+              Explore Ingredients
             </button>
-          </div>
-
-          {/* Premium Ingredients Card */}
-          <div className="bg-gradient-to-br from-green-400 to-blue-500 rounded-2xl p-8 text-white text-center">
-            <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white text-4xl font-bold mx-auto mb-6">
-              🌿
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Premium Ingredients
-            </h3>
-            <p className="text-white text-opacity-90 mb-6">
-              High-quality, natural ingredients sourced from trusted suppliers
-            </p>
-            <button className="bg-white text-green-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-              Learn More
-            </button>
-          </div>
-
-          {/* Join Community Card */}
-          <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl p-8 text-white text-center">
-            <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white text-4xl font-bold mx-auto mb-6">
-              👥
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Join the Community
-            </h3>
-            <p className="text-white text-opacity-90 mb-6">
-              Connect with like-minded individuals focused on mental clarity
-            </p>
-            <button className="bg-white text-orange-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-              Learn More
+            <button 
+              onClick={() => document.getElementById('newsletter')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-brand-navy transition-colors"
+            >
+              Join Waitlist
             </button>
           </div>
         </div>
@@ -1499,7 +1472,7 @@ function AppContent() {
       <Header />
       <Hero />
       <HorizontalDarkBar />
-      <ScienceSection />
+      <Banner />
       <WhyPrimeFocus />
       <ThreeCards />
       <FAQ />
