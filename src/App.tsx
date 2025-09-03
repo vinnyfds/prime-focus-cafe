@@ -185,7 +185,7 @@ function Hero() {
             <div className="bg-white text-slate-900 rounded-2xl shadow-xl p-6">
               <div className="flex items-center space-x-4">
                 <img
-                  src="/images/dr-ram.svg"
+                  src="/images/dr-ram.jpeg"
                   alt="Dr. Ram P. Ramcharran"
                   className="w-16 h-16 rounded-full object-cover"
                 />
@@ -418,16 +418,22 @@ function ThreeCards() {
           {/* Science Backed Formulation Card */}
           <div className="bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl p-8 text-white shadow-xl">
             <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-6">
-              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                className="w-8 h-8 text-white"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold mb-4">Science-Backed Formulation</h3>
+            <h3 className="text-2xl font-bold mb-4">
+              Science-Backed Formulation
+            </h3>
             <p className="text-white text-opacity-90 mb-6">
               Clinically proven ingredients backed by scientific research
             </p>
-            <button 
-              onClick={() => scrollToSection('references')}
+            <button
+              onClick={() => scrollToSection("references")}
               className="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
             >
               Learn More
@@ -437,16 +443,24 @@ function ThreeCards() {
           {/* Premium Ingredients Card */}
           <div className="bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl p-8 text-white shadow-xl">
             <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-6">
-              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+              <svg
+                className="w-8 h-8 text-white"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
             <h3 className="text-2xl font-bold mb-4">Premium Ingredients</h3>
             <p className="text-white text-opacity-90 mb-6">
               High-quality, natural ingredients sourced from trusted suppliers
             </p>
-            <button 
-              onClick={() => scrollToSection('ingredients')}
+            <button
+              onClick={() => scrollToSection("ingredients")}
               className="bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
             >
               Learn More
@@ -456,7 +470,11 @@ function ThreeCards() {
           {/* Join the Community Card */}
           <div className="bg-gradient-to-br from-orange-500 to-yellow-500 rounded-2xl p-8 text-white shadow-xl">
             <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-6">
-              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                className="w-8 h-8 text-white"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
               </svg>
             </div>
@@ -464,8 +482,8 @@ function ThreeCards() {
             <p className="text-white text-opacity-90 mb-6">
               Connect with like-minded individuals focused on mental clarity
             </p>
-            <button 
-              onClick={() => scrollToSection('newsletter')}
+            <button
+              onClick={() => scrollToSection("newsletter")}
               className="bg-white text-orange-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
             >
               Learn More
