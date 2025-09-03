@@ -254,17 +254,27 @@ function Banner() {
             Unlock Your Cognitive Potential
           </h2>
           <p className="text-xl text-white text-opacity-90 mb-8 leading-relaxed">
-            Experience the power of scientifically-formulated nootropics designed for modern professionals who demand peak mental performance.
+            Experience the power of scientifically-formulated nootropics
+            designed for modern professionals who demand peak mental
+            performance.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button 
-              onClick={() => document.getElementById('ingredients')?.scrollIntoView({ behavior: 'smooth' })}
+            <button
+              onClick={() =>
+                document
+                  .getElementById("ingredients")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
               className="bg-white text-brand-navy px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors shadow-lg"
             >
               Explore Ingredients
             </button>
-            <button 
-              onClick={() => document.getElementById('newsletter')?.scrollIntoView({ behavior: 'smooth' })}
+            <button
+              onClick={() =>
+                document
+                  .getElementById("newsletter")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
               className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-brand-navy transition-colors"
             >
               Join Waitlist
@@ -837,23 +847,43 @@ function RealLife() {
 
 function StayUpdated() {
   return (
-    <section id="newsletter" className="py-20 bg-slate-900 text-white">
+    <section id="newsletter" className="py-20 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-4xl font-bold text-white mb-6">Stay Updated</h2>
-        <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-          Receive updates on launch, research, and exclusive offers
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="flex-1 px-4 py-3 rounded-lg text-slate-900 border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-          <button className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-6 py-3 rounded-lg font-semibold transition-colors">
-            Subscribe
-          </button>
+        <div className="mb-12">
+          <h2 className="text-6xl font-bold text-slate-800 mb-4">500+</h2>
+          <p className="text-xl text-slate-600 mb-12">
+            People are on the waitlist to join the community. Join us today!
+          </p>
         </div>
+
+        {/* Statistics */}
+        <div className="flex flex-col sm:flex-row gap-8 justify-center items-center mb-12">
+          <div className="text-center">
+            <div className="w-24 h-24 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
+              <span className="text-white text-2xl font-bold">150</span>
+            </div>
+            <p className="text-slate-600 font-medium">Active Members</p>
+          </div>
+          
+          <div className="text-center">
+            <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+              <span className="text-white text-2xl font-bold">75</span>
+            </div>
+            <p className="text-slate-600 font-medium">Daily Users</p>
+          </div>
+          
+          <div className="text-center">
+            <div className="w-24 h-24 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
+              <span className="text-white text-2xl font-bold">25</span>
+            </div>
+            <p className="text-slate-600 font-medium">New This Week</p>
+          </div>
+        </div>
+
+        {/* Join Waitlist Button */}
+        <button className="bg-brand-gold hover:bg-brand-orange text-slate-900 px-12 py-4 rounded-lg font-bold text-lg transition-colors shadow-lg">
+          Join the Waitlist
+        </button>
       </div>
     </section>
   );
