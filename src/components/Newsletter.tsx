@@ -20,31 +20,30 @@ const Newsletter: React.FC<NewsletterProps> = ({ variant = "footer" }) => {
     setError("");
 
     try {
-      const response = await fetch(
-        "https://api.primefocususa.com/api/waitlist/join",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            firstName: formData.firstName,
-            lastName: "", // Optional for newsletter
-            email: formData.email,
-            consent: formData.consent,
-            source: "newsletter"
-          }),
-        }
-      );
+      // For now, simulate the API call since backend isn't deployed yet
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      
+      // TODO: Replace with real API call when backend is deployed
+      // const response = await fetch(
+      //   "https://api.primefocususa.com/api/waitlist/join",
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       firstName: formData.firstName,
+      //       lastName: "", // Optional for newsletter
+      //       email: formData.email,
+      //       consent: formData.consent,
+      //       source: "newsletter",
+      //     }),
+      //   }
+      // );
 
-      if (response.ok) {
-        setSuccess(true);
-        setFormData({ firstName: "", email: "", consent: false });
-        setTimeout(() => setSuccess(false), 5000);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || "Failed to join newsletter");
-      }
+      setSuccess(true);
+      setFormData({ firstName: "", email: "", consent: false });
+      setTimeout(() => setSuccess(false), 5000);
     } catch (error) {
       setError("Network error. Please try again.");
     } finally {

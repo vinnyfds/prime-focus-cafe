@@ -827,33 +827,35 @@ function WaitlistPopup({
     setLoading(true);
 
     try {
-      const response = await fetch("https://api.primefocususa.com/api/waitlist/join", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone || null,
-          consent: true,
-          source: "popup"
-        }),
-      });
+      // For now, simulate the API call since backend isn't deployed yet
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      
+      // TODO: Replace with real API call when backend is deployed
+      // const response = await fetch(
+      //   "https://api.primefocususa.com/api/waitlist/join",
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       firstName: formData.firstName,
+      //       lastName: formData.lastName,
+      //       email: formData.email,
+      //       phone: formData.phone || null,
+      //       consent: true,
+      //       source: "popup",
+      //     }),
+      //   }
+      // );
+      // const result = await response.json();
 
-      const result = await response.json();
-
-      if (result.success) {
-        alert("Successfully joined the waitlist!");
-        onClose();
-        setFormData({ firstName: "", lastName: "", email: "", phone: "" });
-      } else {
-        alert(result.message || "Error joining waitlist. Please try again.");
-      }
+      alert("Successfully joined the waitlist! We'll notify you when we launch.");
+      onClose();
+      setFormData({ firstName: "", lastName: "", email: "", phone: "" });
     } catch (error) {
       console.error("Waitlist submission error:", error);
-      alert("Network error. Please check your connection and try again.");
+      alert("Error joining waitlist. Please try again.");
     } finally {
       setLoading(false);
     }

@@ -1,71 +1,77 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const helmet = require('helmet');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
-require('dotenv').config();
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const helmet = require("helmet");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+require("dotenv").config();
 
 // Import routes
-const authRoutes = require('./routes/auth');
-const waitlistRoutes = require('./routes/waitlist');
-const oauthRoutes = require('./routes/oauth');
+const authRoutes = require("./routes/auth");
+const waitlistRoutes = require("./routes/waitlist");
+const oauthRoutes = require("./routes/oauth");
 
 // Import middleware
-const { generalLimiter } = require('./middleware/rateLimiter');
+const { generalLimiter } = require("./middleware/rateLimiter");
 
 // Import passport config
-require('./config/passport');
+require("./config/passport");
 
 const app = express();
 
 // Security middleware
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'"],
-      fontSrc: ["'self'"],
-      objectSrc: ["'none'"],
-      mediaSrc: ["'self'"],
-      frameSrc: ["'none'"],
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", "data:", "https:"],
+        connectSrc: ["'self'"],
+        fontSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        mediaSrc: ["'self'"],
+        frameSrc: ["'none'"],
+      },
     },
-  },
-}));
+  })
+);
 
 // CORS configuration
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Session configuration
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI,
-    touchAfter: 24 * 3600 // lazy session update
-  }),
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      touchAfter: 24 * 3600, // lazy session update
+    }),
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
 
 // Passport middleware
-const passport = require('passport');
+const passport = require("passport");
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -73,39 +79,39 @@ app.use(passport.session());
 app.use(generalLimiter);
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get("/health", (req, res) => {
   res.json({
     success: true,
-    message: 'Prime Focus C.A.F.E. API is running',
+    message: "Prime Focus C.A.F.E. API is running",
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV
+    environment: process.env.NODE_ENV,
   });
 });
 
 // API routes
-app.use('/api/auth', authRoutes);
-app.use('/api/waitlist', waitlistRoutes);
-app.use('/api/oauth', oauthRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/waitlist", waitlistRoutes);
+app.use("/api/oauth", oauthRoutes);
 
 // 404 handler
-app.use('*', (req, res) => {
+app.use("*", (req, res) => {
   res.status(404).json({
     success: false,
-    message: 'API endpoint not found'
+    message: "API endpoint not found",
   });
 });
 
 // Global error handler
 app.use((error, req, res, next) => {
-  console.error('Global error handler:', error);
-  
+  console.error("Global error handler:", error);
+
   // Mongoose validation error
-  if (error.name === 'ValidationError') {
-    const errors = Object.values(error.errors).map(err => err.message);
+  if (error.name === "ValidationError") {
+    const errors = Object.values(error.errors).map((err) => err.message);
     return res.status(400).json({
       success: false,
-      message: 'Validation error',
-      errors
+      message: "Validation error",
+      errors,
     });
   }
 
@@ -114,31 +120,32 @@ app.use((error, req, res, next) => {
     const field = Object.keys(error.keyValue)[0];
     return res.status(400).json({
       success: false,
-      message: `${field} already exists`
+      message: `${field} already exists`,
     });
   }
 
   // JWT errors
-  if (error.name === 'JsonWebTokenError') {
+  if (error.name === "JsonWebTokenError") {
     return res.status(401).json({
       success: false,
-      message: 'Invalid token'
+      message: "Invalid token",
     });
   }
 
-  if (error.name === 'TokenExpiredError') {
+  if (error.name === "TokenExpiredError") {
     return res.status(401).json({
       success: false,
-      message: 'Token expired'
+      message: "Token expired",
     });
   }
 
   // Default error
   res.status(500).json({
     success: false,
-    message: process.env.NODE_ENV === 'production' 
-      ? 'Internal server error' 
-      : error.message
+    message:
+      process.env.NODE_ENV === "production"
+        ? "Internal server error"
+        : error.message,
   });
 });
 
@@ -149,9 +156,9 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log('✅ MongoDB connected successfully');
+    console.log("✅ MongoDB connected successfully");
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error);
+    console.error("❌ MongoDB connection error:", error);
     process.exit(1);
   }
 };
@@ -161,7 +168,7 @@ const PORT = process.env.PORT || 3001;
 
 const startServer = async () => {
   await connectDB();
-  
+
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📊 Environment: ${process.env.NODE_ENV}`);
@@ -170,14 +177,14 @@ const startServer = async () => {
 };
 
 // Handle unhandled promise rejections
-process.on('unhandledRejection', (err, promise) => {
-  console.error('Unhandled Promise Rejection:', err);
+process.on("unhandledRejection", (err, promise) => {
+  console.error("Unhandled Promise Rejection:", err);
   process.exit(1);
 });
 
 // Handle uncaught exceptions
-process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
   process.exit(1);
 });
 
