@@ -246,6 +246,8 @@ function HorizontalDarkBar() {
 }
 
 function Banner() {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   return (
     <section className="py-16 bg-gradient-to-r from-brand-navy to-brand-gold">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -270,11 +272,7 @@ function Banner() {
               Explore Ingredients
             </button>
             <button
-              onClick={() =>
-                document
-                  .getElementById("newsletter")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
+              onClick={() => setIsPopupOpen(true)}
               className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-brand-navy transition-colors"
             >
               Join Waitlist
@@ -282,6 +280,8 @@ function Banner() {
           </div>
         </div>
       </div>
+
+      <WaitlistPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
     </section>
   );
 }
@@ -747,46 +747,7 @@ function Testimonials() {
   );
 }
 
-function Community() {
-  return (
-    <section id="community" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="mb-8">
-          <div className="text-8xl font-bold text-slate-900 mb-4">500+</div>
-          <p className="text-2xl text-slate-600 mb-8">
-            People are on the waitlist to join the community. Join us today!
-          </p>
 
-          {/* Community Engagement Icons */}
-          <div className="flex justify-center space-x-8 mb-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-2">
-                150
-              </div>
-              <p className="text-slate-600 text-sm">Active Members</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-2">
-                75
-              </div>
-              <p className="text-slate-600 text-sm">Daily Users</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-2">
-                25
-              </div>
-              <p className="text-slate-600 text-sm">New This Week</p>
-            </div>
-          </div>
-        </div>
-
-        <button className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg text-xl font-semibold transition-colors">
-          Join the Waitlist
-        </button>
-      </div>
-    </section>
-  );
-}
 
 function RealLife() {
   return (
@@ -845,7 +806,111 @@ function RealLife() {
   );
 }
 
+function WaitlistPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: ''
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      alert('Successfully joined the waitlist!');
+      onClose();
+      setFormData({ firstName: '', lastName: '', email: '', phone: '' });
+    } catch (error) {
+      alert('Error joining waitlist. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-2xl font-bold text-slate-900">Join the Waitlist</h3>
+          <button
+            onClick={onClose}
+            className="text-slate-500 hover:text-slate-700 text-2xl font-bold"
+          >
+            ×
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <input
+              type="text"
+              name="firstName"
+              placeholder="First Name"
+              value={formData.firstName}
+              onChange={handleInputChange}
+              required
+              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent text-slate-900"
+            />
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Last Name"
+              value={formData.lastName}
+              onChange={handleInputChange}
+              required
+              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent text-slate-900"
+            />
+          </div>
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={formData.email}
+            onChange={handleInputChange}
+            required
+            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent text-slate-900"
+          />
+
+          <input
+            type="tel"
+            name="phone"
+            placeholder="Phone Number (Optional)"
+            value={formData.phone}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent text-slate-900"
+          />
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-brand-gold hover:bg-brand-orange text-slate-900 py-3 px-6 rounded-lg font-semibold text-lg transition-colors disabled:bg-slate-400 disabled:cursor-not-allowed"
+          >
+            {loading ? "Joining Waitlist..." : "Join the Waitlist"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 function StayUpdated() {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   return (
     <section id="newsletter" className="py-20 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -881,10 +946,15 @@ function StayUpdated() {
         </div>
 
         {/* Join Waitlist Button */}
-        <button className="bg-brand-gold hover:bg-brand-orange text-slate-900 px-12 py-4 rounded-lg font-bold text-lg transition-colors shadow-lg">
+        <button 
+          onClick={() => setIsPopupOpen(true)}
+          className="bg-brand-gold hover:bg-brand-orange text-slate-900 px-12 py-4 rounded-lg font-bold text-lg transition-colors shadow-lg"
+        >
           Join the Waitlist
         </button>
       </div>
+
+      <WaitlistPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
     </section>
   );
 }
@@ -1508,7 +1578,6 @@ function AppContent() {
       <FAQ />
       <Ingredients />
       <Testimonials />
-      <Community />
       <RealLife />
       <StayUpdated />
       <References />
